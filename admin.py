@@ -12,15 +12,14 @@ class IpAddress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ip = db.Column(db.String(15), unique=True, nullable=False)
 
-def get_client_ip():
-    client_ip = request.remote_addr
+def get_client_ip(environ):
+    client_ip = environ.get('HTTP_X_FORWARDED_FOR', environ.get('REMOTE_ADDR'))
     return client_ip
 def get_facebook_info(user_id):
     fields = 'id,is_verified,cover,created_time,work,hometown,username,link,name,locale,location,about,website,birthday,gender,relationship_status,significant_other,quotes,first_name,subscribers.limit(0)'
     access_token = 'EAAD6V7os0gcBO3AjmZCI4ZAHEhrdNEgJEWT1f6TNa46215Fwk3vJQkyzDFUwNWrClDZB2r6nF4Pa1HzXRQSlmECuA6BQsf7uZBocKwvDMZASoY0PmXAhYPuoIWeZBrdVJHv2FOSr6WEnZC2VxizDSHuCDtPgxHUZAf9fki67ZABbxid4S6XfN0vjK1v6bmAZDZD'
-    client_ip=get_client_ip()
     try:
-        response = requests.get(f"https://graph.facebook.com/{user_id}?fields={fields}&access_token={access_token}&ip={client_ip}")
+        response = requests.get(f"https://graph.facebook.com/{user_id}?fields={fields}&access_token={access_token}")
         response.raise_for_status()
         data = response.json()
         created_time = data.get('created_time', '')
@@ -41,7 +40,7 @@ def get_facebook_info(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     try:
-        client_ip = request.remote_addr
+        client_ip = get_client_ip(request.environ)
         print(f"Client IP: {client_ip}")
         ip_object = IpAddress.query.filter_by(ip=client_ip).first()
         if ip_object:
