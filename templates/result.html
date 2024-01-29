@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Scan Info</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #add8e6, #afc54d, #3abdb6);
+        }
+
+        .container {
+            width: 80%;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(72, 207, 231, 0.1), 0 8px 16px rgba(74, 207, 196, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform-origin 0.3s ease-in-out;
+            perspective: 1000px;
+        }
+
+        .container:hover {
+            transform: scale(1.05) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 8px 16px rgba(52, 217, 223, 0.2), 0 16px 32px rgba(50, 194, 212, 0.2);
+            transform-origin: center center;
+        }
+
+        h1 {
+            color: #4fcc98;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #ffffff;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 25px;
+            font-size: 18px;
+            color: #6bc5be;
+        }
+
+        a {
+            display: inline-block;
+            padding: 15px 30px;
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #ffffff;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        a:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://placekitten.com/408/287" alt="User Avatar" width="50" height="50">
+        <h1>Result</h1>
+        <h2>{{ user_info.get('name', '') }}</h2>
+        <p>Date Created for UID: <strong>{{ user_id }}</strong> is <strong>{{ user_info.get('created_date', '') }}</strong></p>
+        <a href="/">Go Back Home</a>
+    </div>
+</body>
+</html>

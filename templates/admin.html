@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Management</title>
+</head>
+<body>
+    <h1>IP Management</h1>
+
+    <h2>Menu:</h2>
+    <p>
+        1. Thêm IP
+        <form action="/themip" method="get">
+            <label for="themip">Nhập IP muốn thêm:</label>
+            <input type="text" name="ip" id="themip" required>
+            <button type="submit">Thêm</button>
+        </form>
+    </p>
+
+    <p>
+        2. Xóa IP
+        <form action="/xoaip" method="get">
+            <label for="xoapip">Nhập IP muốn xóa:</label>
+            <input type="text" name="ip" id="xoapip" required>
+            <button type="submit">Xóa</button>
+        </form>
+    </p>
+
+    <p>
+        3. Kiểm Tra
+        <form action="/kiemtraip" method="get">
+            <button type="submit">Kiểm Tra</button>
+        </form>
+    </p>
+</body>
+</html>
