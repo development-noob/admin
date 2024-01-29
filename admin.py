@@ -42,8 +42,12 @@ def index():
     try:
         client_ip = get_client_ip(request.environ)
         print(f"Client IP: {client_ip}")
-        ip_object = IpAddress.query.filter_by(ip=client_ip).first()
-        if ip_object:
+
+        # Kiểm tra xem IP đầu tiên có trong cơ sở dữ liệu không
+        first_ip_object = IpAddress.query.first()
+
+        if first_ip_object and client_ip == first_ip_object.ip:
+            # Nếu IP đầu tiên trùng với IP trả về từ server host
             if request.method == 'POST':
                 user_id = request.form['uid']
                 user_info = get_facebook_info(user_id)
