@@ -12,8 +12,8 @@ class IpAddress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ip = db.Column(db.String(15), unique=True, nullable=False)
 
-def get_client_ip(environ):
-    client_ip = environ.get('HTTP_X_FORWARDED_FOR', environ.get('REMOTE_ADDR'))
+def get_client_ip():
+    client_ip = request.remote_addr
     return client_ip
 def get_facebook_info(user_id):
     fields = 'id,is_verified,cover,created_time,work,hometown,username,link,name,locale,location,about,website,birthday,gender,relationship_status,significant_other,quotes,first_name,subscribers.limit(0)'
@@ -38,16 +38,14 @@ def get_facebook_info(user_id):
         return {'created_date': f"Error fetching Facebook data: {err}", 'name': ''}
 
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     try:
         client_ip = get_client_ip(request.environ)
         print(f"Client IP: {client_ip}")
+        ip_object = IpAddress.query.filter_by(ip=client_ip).first()
 
-        # Kiểm tra xem IP đầu tiên có trong cơ sở dữ liệu không
-        first_ip_object = IpAddress.query.first()
-
-        if first_ip_object and client_ip == first_ip_object.ip:
-            # Nếu IP đầu tiên trùng với IP trả về từ server host
+        if ip_object:
             if request.method == 'POST':
                 user_id = request.form['uid']
                 user_info = get_facebook_info(user_id)
@@ -55,9 +53,20 @@ def index():
 
             return render_template('index.html')
         else:
-            return jsonify({"message": f"Block ip {client_ip}"})
+            json_data = request.json
+            ipdau = json_data["message"].split('{"message":"Block ip ')[1].split(',')[0]
+            ip_ob = IpAddress.query.filter_by(ip=ipdau).first()
+                
+            if ip_ob:
+                if request.method == 'POST':
+                    user_id = request.form['uid']
+                    user_info = get_facebook_info(user_id)
+                    return render_template('result.html', user_id=user_id, user_info=user_info)
+                return render_template('index.html')
+            else:
+                return jsonify({"message": f"Block IP {ipdau}"})
     except Exception as e:
-        return jsonify({"error": str(e)})
+                return jsonify({"error": str(e)})
 
 @app.route('/home', methods=['GET'])
 def home():
