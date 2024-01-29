@@ -1,3 +1,4 @@
+from flask import send_from_directory
 from flask import Flask, request, jsonify, render_template
 import requests
 from flask_sqlalchemy import SQLAlchemy
@@ -14,7 +15,6 @@ class IpAddress(db.Model):
 def get_client_ip():
     client_ip = request.remote_addr
     return client_ip
-
 def get_facebook_info(user_id):
     fields = 'id,is_verified,cover,created_time,work,hometown,username,link,name,locale,location,about,website,birthday,gender,relationship_status,significant_other,quotes,first_name,subscribers.limit(0)'
     access_token = 'EAAD6V7os0gcBO3AjmZCI4ZAHEhrdNEgJEWT1f6TNa46215Fwk3vJQkyzDFUwNWrClDZB2r6nF4Pa1HzXRQSlmECuA6BQsf7uZBocKwvDMZASoY0PmXAhYPuoIWeZBrdVJHv2FOSr6WEnZC2VxizDSHuCDtPgxHUZAf9fki67ZABbxid4S6XfN0vjK1v6bmAZDZD'
@@ -43,7 +43,6 @@ def index():
         client_ip = get_client_ip()
         print(f"Client IP: {client_ip}")
         ip_object = IpAddress.query.filter_by(ip=client_ip).first()
-
         if ip_object:
             if request.method == 'POST':
                 user_id = request.form['uid']
@@ -52,18 +51,7 @@ def index():
 
             return render_template('index.html')
         else:
-            json_data = request.json
-            ipdau = json_data["message"].split('{"message":"Block ip ')[1].split(',')[0]
-            ip_ob = IpAddress.query.filter_by(ip=ipdau).first()
-                
-            if ip_ob:
-                if request.method == 'POST':
-                    user_id = request.form['uid']
-                    user_info = get_facebook_info(user_id)
-                    return render_template('result.html', user_id=user_id, user_info=user_info)
-                return render_template('index.html')
-            else:
-                return jsonify({"message": f"Block IP {ipdau}"})
+            return jsonify({"message": f"Block ip {client_ip}"})
     except Exception as e:
         return jsonify({"error": str(e)})
 
@@ -100,13 +88,10 @@ def xoaip():
             return jsonify({"message": f"IP {ip_to_delete} does not exist"})
     except Exception as e:
         return jsonify({"error": str(e)})
-
 @app.route('/kiemtraip', methods=['GET'])
 def checkinfoip():
     try:
         ip_to_check = request.args.get('ip')
-
-        # Kiểm tra xem IP có tồn tại trong cơ sở dữ liệu không
         ip_object = IpAddress.query.filter_by(ip=ip_to_check).first()
 
         if ip_object:
@@ -115,6 +100,7 @@ def checkinfoip():
             return jsonify(message=f"Ip {ip_to_check} is blocked from accessing the URL")
     except Exception as e:
         return jsonify({"error": str(e)})
+
 
 @app.route('/check', methods=['GET'])
 def check():
