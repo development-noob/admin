@@ -41,7 +41,7 @@ def get_facebook_info(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     try:
-        client_ip = get_client_ip(request.environ)
+        client_ip = get_client_ip()
         print(f"Client IP: {client_ip}")
         ip_object = IpAddress.query.filter_by(ip=client_ip).first()
 
