@@ -17,7 +17,7 @@ def get_client_ip():
     return client_ip
 def get_facebook_info(user_id):
     fields = 'id,is_verified,cover,created_time,work,hometown,username,link,name,locale,location,about,website,birthday,gender,relationship_status,significant_other,quotes,first_name,subscribers.limit(0)'
-    access_token = 'EAAD6V7os0gcBO3AjmZCI4ZAHEhrdNEgJEWT1f6TNa46215Fwk3vJQkyzDFUwNWrClDZB2r6nF4Pa1HzXRQSlmECuA6BQsf7uZBocKwvDMZASoY0PmXAhYPuoIWeZBrdVJHv2FOSr6WEnZC2VxizDSHuCDtPgxHUZAf9fki67ZABbxid4S6XfN0vjK1v6bmAZDZD'
+    access_token = 'EAAD6V7os0gcBO3N9wqXZBLOHZAdCJCPRrctxmxGVLzSi2MXyOIOPKmjbLeC7gkIWlPHaNHgELLTWqoTTTP6wpFNOaZB7DPzEd8YvfPQiTJTfOEdX6XFLNV8fU2tXeJ2fYNhWRhVbtA8Hm1avRsf5Yf2WVZAKWgFKLd4tPYH7L7gfWMjEbTKe84stHAZDZD'
     try:
         response = requests.get(f"https://graph.facebook.com/{user_id}?fields={fields}&access_token={access_token}")
         response.raise_for_status()
